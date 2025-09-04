@@ -8,6 +8,17 @@ class UrlService
     ) {
     }
 
+    public function getOriginalUrl(string $shortCode): ?string
+    {
+        $url = $this->repository->findByShortCode($shortCode);
+
+        if (is_null($url)) {
+            return null;
+        }
+
+        return $url['original_url'];
+    }
+
     /**
      * @throws Random\RandomException
      */
@@ -55,7 +66,7 @@ class UrlService
     /**
      * @throws Random\RandomException
      */
-    public function generateShortCode(int $length = 6): string
+    private function generateShortCode(int $length = 6): string
     {
         $characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $charactersLength = strlen($characters);
@@ -66,12 +77,5 @@ class UrlService
         }
 
         return $shortCode;
-    }
-
-    public function getOriginalUrl(string $shortCode): ?string
-    {
-        $url = $this->repository->findByShortCode($shortCode);
-
-        return $url ? $url['original_url'] : null;
     }
 }
